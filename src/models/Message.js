@@ -2,9 +2,9 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../db';
 import User from './User';
 
-class Project extends Model {}
+class Message extends Model {}
 
-Project.init(
+Message.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -12,11 +12,7 @@ Project.init(
       nullable: false,
       autoIncrement: true,
     },
-    name: {
-      type: DataTypes.STRING,
-      nullable: false,
-    },
-    description: {
+    message: {
       type: DataTypes.STRING,
       nullable: false,
     },
@@ -27,12 +23,19 @@ Project.init(
         key: 'id',
       },
     },
+	 username: {
+      type: DataTypes.STRING,
+      references: {
+        model: User,
+        key: 'username',
+      },
+    },
   },
   {
     sequelize,
-    tableName: 'projects',
+    tableName: 'messages',
     timestamps: false,
   }
 );
 
-export default Project;
+export default Message;

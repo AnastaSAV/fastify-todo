@@ -2,18 +2,14 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('projects', {
+    await queryInterface.createTable('messages', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         nullable: false,
         autoIncrement: true,
       },
-      name: {
-        type: Sequelize.STRING,
-        nullable: false,
-      },
-      description: {
+      message: {
         type: Sequelize.STRING,
         nullable: false,
       },
@@ -27,10 +23,20 @@ module.exports = {
         },
         nullable: false,
       },
+		username: {
+			type: Sequelize.STRING,
+			references: {
+			  model: {
+				 tableName: 'users',
+			  },
+			  key: 'username',
+			},
+			nullable: false,
+		 },
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('projects');
+    await queryInterface.dropTable('messages');
   },
 };

@@ -3,8 +3,8 @@ import Fastify from 'fastify';
 import User from './models/User';
 import { compare, hash } from 'bcrypt';
 import { sign, verify } from 'jsonwebtoken';
-import Project from './models/Project';
-import projects from './validations/projects';
+import Message from './models/Message';
+import messages from './validations/messages';
 
 const fastify = Fastify({ logger: true });
 
@@ -27,17 +27,17 @@ fastify.post(
           username: {
             type: 'string',
             minLength: 4,
-            maxLength: 30,
+            maxLength: 50,
           },
           email: {
             type: 'string',
             minLength: 4,
-            maxLength: 30,
+            maxLength: 50,
           },
           password: {
             type: 'string',
             minLength: 4,
-            maxLength: 30,
+            maxLength: 10,
           },
         },
       },
@@ -67,12 +67,12 @@ fastify.post(
           email: {
             type: 'string',
             minLength: 4,
-            maxLength: 30,
+            maxLength: 50,
           },
           password: {
             type: 'string',
             minLength: 4,
-            maxLength: 30,
+            maxLength: 10,
           },
         },
       },
@@ -116,32 +116,35 @@ fastify.register((instance, {}, done) => {
     }
   });
 
-  instance.get('/projects', async (request, reply) => {
+  instance.get('/messages', async (request, reply) => {
     const { user } = request;
-    const projects = await Project.findAll({
+    const messages = await Message.findAll({
       where: {
         userId: user.id,
+		  username: user.username,
       },
     });
-
-    reply.send(projects);
+	 if(messages) {
+		reply.send(messages);
+	 }
+	 reply.status(404).send({info: 'Messages not found'});
   });
 
-  instance.post('/projects', projects, async (request, reply) => {
+  instance.post('/messages', messages, async (request, reply) => {
     const {
-      body: { name, description },
+      body: { message },
       user,
     } = request;
-    const project = new Project({
-      name,
-      description,
+    const newMessage = new Message({
+      message,
       userId: user.id,
+		username: user.username,
     });
 
-    await project.save();
+    await newMessage.save();
 
     reply.send(
-      await Project.findAll({
+      await Message.findAll({
         where: {
           userId: user.id,
         },
@@ -149,27 +152,27 @@ fastify.register((instance, {}, done) => {
     );
   });
 
-  instance.put('/projects/:id', projects, async (request, reply) => {
+  instance.put('/messages/:id', messages, async (request, reply) => {
     const {
-      body: { name, description },
+      body: { message },
       user,
       params: { id },
     } = request;
-    const project = await Project.findOne({ where: { id, userId: user.id } });
+    const newMessage = await Message.findOne({ where: { id, userId: user.id } });
 
-    if (project) {
-      await project.update({ name, description });
+    if (newMessage) {
+      await newMessage.update({ message });
 
-      await project.save();
+      await newMessage.save();
 
-      return reply.send(project);
+      return reply.send(newMessage);
     }
 
-    reply.status(404).send({ info: 'project does not exist' });
+    reply.status(404).send({ info: 'message does not exist' });
   });
 
   instance.delete(
-    '/projects/:id',
+    '/messages/:id',
     {
       schema: {
         params: {
@@ -188,19 +191,19 @@ fastify.register((instance, {}, done) => {
         user,
         params: { id },
       } = request;
-      const project = await Project.findOne({ where: { id, userId: user.id } });
+      const newMessage = await Message.findOne({ where: { id, userId: user.id } });
 
-      if (project) {
-        await project.destroy();
+      if (newMessage) {
+        await newMessage.destroy();
 
-        await project.save();
+        await newMessage.save();
 
         return reply.send(
-          await Project.findAll({ where: { userId: user.id } })
+          await Message.findAll({ where: { userId: user.id } })
         );
       }
 
-      reply.status(404).send({ info: 'project does not exist' });
+      reply.status(404).send({ info: 'message does not exist' });
     }
   );
 
