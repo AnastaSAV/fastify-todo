@@ -212,7 +212,7 @@ fastify.register((instance, {}, done) => {
 const start = async () => {
   try {
     await sequelize.authenticate();
-    await fastify.listen(3001);
+    await fastify.listen(8090);
   } catch (error) {
     console.log(error);
   }
