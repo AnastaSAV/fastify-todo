@@ -2,17 +2,17 @@ export default {
   schema: {
     body: {
       type: 'object',
-      required: [ 'message', 'username' ],
+      required: [ 'message' ],
       properties: {
 			message: {
           type: 'string',
           minLength: 1,
           maxLength: 500,
         },
-		  username: {
+		  author: {
 			type: 'string',
-			minLength: 1,
-			maxLength: 30,
+			minLength: 4,
+			maxLength: 50,
 		 },
       },
     },

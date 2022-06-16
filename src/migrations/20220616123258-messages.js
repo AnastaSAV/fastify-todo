@@ -23,7 +23,7 @@ module.exports = {
         },
         nullable: false,
       },
-		username: {
+		author: {
 			type: Sequelize.STRING,
 			references: {
 			  model: {

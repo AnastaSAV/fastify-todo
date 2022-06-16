@@ -121,7 +121,6 @@ fastify.register((instance, {}, done) => {
     const messages = await Message.findAll({
       where: {
         userId: user.id,
-		  username: user.username,
       },
     });
 	 if(messages) {
@@ -138,7 +137,7 @@ fastify.register((instance, {}, done) => {
     const newMessage = new Message({
       message,
       userId: user.id,
-		username: user.username,
+		author: user.username,
     });
 
     await newMessage.save();
