@@ -26,10 +26,10 @@
     "singleQuote": true
   },
   "dependencies": {
+    "@fastify/cors": "^8.0.0",
     "bcrypt": "^5.0.1",
     "fastify": "^3.28.0",
     "fastify-cookie": "^5.6.0",
-    "fastify-cors": "^6.0.3",
     "fastify-multipart": "^5.3.1",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3",

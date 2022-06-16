@@ -12,7 +12,9 @@ fastify.register(import('fastify-cookie'));
 fastify.register(import('fastify-multipart'), {
   addToBody: true,
 });
-fastify.register(import('fastify-cors'));
+fastify.register(require('@fastify/cors'), {
+	origin: 'http://fastify.home.local',
+});
 
 const secret = 'secret';
 
